@@ -16,3 +16,6 @@
 
 ## Directory-based project format:
 .idea/
+
+#because we're putting in some secret stuff
+/app/config/deploy.rb
