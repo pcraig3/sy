@@ -30,23 +30,23 @@ security:
             pattern:  ^/demo/secured/login$
             security: false
 
-        # secures part of the application
-        demo_secured_area:
+        secured_area:
             pattern:    ^/demo/secured/
-            # it's important to notice that in this case _demo_security_check and _demo_login
-            # are route names and that they are specified in the AcmeDemoBundle
-            form_login:
-                check_path: _demo_security_check
-                login_path: _demo_login
-            logout:
-                path:   _demo_logout
-                target: _demo
-            #anonymous: ~
-            #http_basic:
-            #    realm: "Secured Demo Area"
+            oauth:
+                resource_owners:
+                    facebook:      /demo/secured/login_facebook
+                login_path:        /demo/secured/login
+                check_path:       /demo/secured/login_check
+                failure_path:      /demo/secured/login
+                oauth_user_provider:
+                    service: hwi_oauth.user.provider.entity
+
+            # Turn on anonymous for testings need.
+            anonymous: ~
 
     # with these settings you can restrict or allow access for different parts
     # of your application based on roles, ip, host or methods
     # http://symfony.com/doc/current/cookbook/security/access_control.html
     access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
