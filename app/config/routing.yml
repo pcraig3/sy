@@ -12,6 +12,8 @@ hwi_oauth_redirect:
 fb_app:
     resource: @FBAppBundle/Controller/
     type:     annotation
+    prefix:   /fb
+
 
 facebook_login:
     #pattern: /login/check-facebook
