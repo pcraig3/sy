@@ -14,12 +14,4 @@ class DefaultController extends Controller
     {
         return $this->render('default/index.html.twig');
     }
-
-    /**
-     * @Route("/login", name="fb_login")
-     */
-    public function loginAction()
-    {
-        return $this->render('FBAppBundle:Default:login.html.twig');
-    }
 }

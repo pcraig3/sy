@@ -31,13 +31,13 @@ security:
             security: false
 
         secured_area:
-            pattern:    ^/demo/secured/
+            pattern:    ^/fb/secured/
             oauth:
                 resource_owners:
-                    facebook:      /demo/secured/login_facebook
-                login_path:        /demo/secured/login
-                check_path:       /demo/secured/login_check
-                failure_path:      /demo/secured/login
+                    facebook:      /fb/secured/login_facebook
+                login_path:        /fb/secured/login
+                check_path:       /fb/secured/login_check
+                failure_path:      /fb/secured/login
                 oauth_user_provider:
                     service: hwi_oauth.user.provider.entity
 
