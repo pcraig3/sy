@@ -2,8 +2,7 @@
 #HWIOAuthBundle routes
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    #prefix:   /connect
-    prefix:   /demo/secured/connect
+    #prefix:   /demo/secured/connect
 
 #hwi_oauth_login:
 #    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
@@ -13,8 +12,3 @@ fb_app:
     resource: @FBAppBundle/Controller/
     type:     annotation
     prefix:   /fb
-
-
-facebook_login:
-    #pattern: /login/check-facebook
-    pattern: /demo/secured/login_facebook

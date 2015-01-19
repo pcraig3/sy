@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class SecuredController extends Controller {
 
     /**
-     * @Route("/secured/login", name="fb_login")
+     * @Route("/login", name="fb_login")
      */
     public function loginAction()
     {
