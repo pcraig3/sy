@@ -9,8 +9,8 @@ hwi_oauth_redirect:
 #    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
 #    prefix:   /login
 
-app:
-    resource: @AppBundle/Controller/
+fb_app:
+    resource: @FBAppBundle/Controller/
     type:     annotation
 
 facebook_login:
