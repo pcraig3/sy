@@ -15,7 +15,7 @@ class SecuredController extends Controller {
 
     /**
      * @TODO: http://inchoo.net/dev-talk/symfony-hwioauthbundle-and-google-sign-in/
-     * @TODO: https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/doc/3-configuring_the_security_layer.md
+         * @TODO: https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/doc/3-configuring_the_security_layer.md
      *
      *  //sign in
      *  //print friends

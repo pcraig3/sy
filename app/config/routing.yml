@@ -1,14 +1,20 @@
-# app/config/routing.yml
 #HWIOAuthBundle routes
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix:   /login
+
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    #prefix:   /demo/secured/connect
+    prefix:   /connect
 
-#hwi_oauth_login:
-#    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-#    prefix:   /login
+#The paths configured in resource_owners (security.yml) should be defined in your routing.
+facebook_login:
+    path: /login/check-facebook
+
+logout:
+    path:   /logout
 
 fb_app:
     resource: @FBAppBundle/Controller/
     type:     annotation
-    prefix:   /fb
+
