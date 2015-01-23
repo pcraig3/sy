@@ -31,14 +31,14 @@ security:
             anonymous: true
             logout: true
             logout:
-                path:   /logout
-                target: /
+                path:   fb_logout
+                target: fb_index
             oauth:
                 resource_owners:
-                    facebook:      "/login/check-facebook"
-                login_path:        /login
-                check_path:       /login/login_check
-                failure_path:      /login
+                    facebook:      fb_security_check
+                login_path:        fb_login
+                check_path:        /login/login_check
+                failure_path:      fb_login
                 oauth_user_provider:
                     service: ib_user.oauth_user_provider
 

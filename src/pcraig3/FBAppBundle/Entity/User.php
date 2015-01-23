@@ -96,10 +96,6 @@ class User extends OAuthUser implements EquatableInterface, \Serializable
     public function __construct($fid)
     {
         $this->facebookId = $fid;
-        $this->name = "Paul";
-
-        //set by default
-        //$this->roles = array();
 
         $this->salt = md5(uniqid(null, true));
     }

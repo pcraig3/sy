@@ -11,6 +11,9 @@ namespace pcraig3\FBAppBundle\Auth;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 
+use Symfony\Component\HttpFoundation\Session\Session;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+
 use pcraig3\FBAppBundle\Entity\User;
 
 
@@ -18,7 +21,7 @@ class OAuthProvider extends OAuthUserProvider
 {
     protected $session, $doctrine, $admins;
 
-    public function __construct($session, $doctrine, $service_container)
+    public function __construct(Session $session, Registry $doctrine, $service_container)
     {
         $this->session = $session;
         $this->doctrine = $doctrine;
@@ -31,17 +34,12 @@ class OAuthProvider extends OAuthUserProvider
      */
     public function loadUserByUsername( $fid )
     {
-        $qb = $this->doctrine->getManager()->createQueryBuilder();
-        $qb->select('u')
-            ->from('FBAppBundle:User', 'u')
-            ->where('u.facebookId = :fid')
-            ->setParameter('fid', $fid )
-            ->setMaxResults(1);
-        $result = $qb->getQuery()->getResult();
+        //Check if this Facebook user already exists in our app DB
+        $result = $this->returnUserByFacebookId( $fid );
 
-        if (count($result)) {
+        if ( $result ) {
 
-            return $result[0];
+            return $result;
         } else {
 
             return new User( $fid );
@@ -63,39 +61,56 @@ class OAuthProvider extends OAuthUserProvider
         $this->session->set('avatar', $avatar);*/
 
         //Check if this Facebook user already exists in our app DB
-        $qb = $this->doctrine->getManager()->createQueryBuilder();
-        $qb->select('u')
-            ->from('FBAppBundle:User', 'u')
-            ->where('u.facebookId = :fid')
-            ->setParameter('fid', $fid )
-            ->setMaxResults(1);
-        $result = $qb->getQuery()->getResult();
+        $result = $this->returnUserByFacebookId( $fid );
 
         //add to database if doesn't exists
-        if (!count($result)) {
+        if (! $result ) {
 
-            $user = new User( $fid );
-            $user->setName( $name );
-            //$user->setRoles('ROLE_USER');
-
-            //Set some wild random pass since its irrelevant, this is Facebook login
-            $factory = $this->container->get('security.encoder_factory');
-            $encoder = $factory->getEncoder($user);
-            $password = $encoder->encodePassword(md5(uniqid()), $user->getSalt());
-            $user->setPassword($password);
+            $user = $this->createNewUser( $fid, $name );
 
             $em = $this->doctrine->getManager();
             $em->persist($user);
             $em->flush();
         } else {
 
-            $user = $result[0]; /* return User */
+            $user = $result; /* return User */
         }
 
         //set id
         $this->session->set('id', $user->getId());
 
         return $this->loadUserByUsername($response->getUsername());
+    }
+
+    private function createNewUser( $fid, $name, $is_admin = false ) {
+
+        $newUser = new User( $fid );
+
+        //set name
+        $newUser->setName( $name );
+
+        //set roles
+        $roles = array( 'ROLE_USER' );
+
+        if( true === $is_admin )
+            array_push( $roles, 'ROLE_ADMIN' );
+
+        $newUser->setRoles( $roles );
+
+        //set (irrelevant) password since this is Facebook login
+        $factory = $this->container->get('security.encoder_factory');
+        $encoder = $factory->getEncoder($newUser);
+        $password = $encoder->encodePassword(md5(uniqid()), $newUser->getSalt());
+        $newUser->setPassword($password);
+
+
+        return $newUser;
+    }
+
+    private function returnUserByFacebookId( $fid ) {
+
+        return $this->doctrine->getManager()
+            ->getRepository('FBAppBundle:User')->findOneByFacebookId( $fid );
     }
 
     public function supportsClass($class)
