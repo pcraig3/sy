@@ -379,7 +379,8 @@ class User extends OAuthUser implements EquatableInterface, \Serializable
             return false;
         }
 
-        if ($this->username !== $user->getUsername()) {
+        //returning facebookId would be more correct :/
+        if ($this->getUsername() !== $user->getUsername()) {
             return false;
         }
 
