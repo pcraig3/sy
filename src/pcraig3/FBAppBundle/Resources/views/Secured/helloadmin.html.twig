@@ -1,9 +1,9 @@
 {% extends "FBAppBundle::layout.html.twig" %}
 
-{% block title "Hello " ~ name %}
+{% block title "Hi " ~ name %}
 
 {% block content %}
-    <h1 class="title">Hello {{ name }} secured for Admins only!</h1>
+    <h1 class="title">Hi {{ name }} secured for Admins only!</h1>
 {% endblock %}
 
 {% set code = code(_self) %}

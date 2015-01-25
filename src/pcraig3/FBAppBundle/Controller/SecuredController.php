@@ -96,7 +96,7 @@ class SecuredController extends Controller {
     }
 
     /**
-     * @Route("/hello/admin/{name}", name="fb_hello_admin")
+     * @Route("/hi/admin/{name}", name="fb_hello_admin")
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function helloadminAction($name)
