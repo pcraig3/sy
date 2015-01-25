@@ -28,8 +28,7 @@ security:
 
         secured_area:
             pattern: ^/
-            anonymous: true
-            logout: true
+            anonymous:  true
             logout:
                 path:   fb_logout
                 target: fb_index
@@ -37,7 +36,7 @@ security:
                 resource_owners:
                     facebook:      fb_security_check
                 login_path:        fb_login
-                check_path:        /login/login_check
+                check_path:        fb_security_check
                 failure_path:      fb_login
                 oauth_user_provider:
                     service: ib_user.oauth_user_provider
@@ -51,6 +50,6 @@ security:
     #access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
     access_control:
-        - { path: ^/admin/users, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/fb/(login|connect), roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/presence, roles: ROLE_ADMIN }
-        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/fb, roles: ROLE_USER }

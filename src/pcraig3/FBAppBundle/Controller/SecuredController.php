@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-/*
+/**
  * @Route("/fb")
  */
 class SecuredController extends Controller {
@@ -80,7 +80,6 @@ class SecuredController extends Controller {
      */
     public function logoutAction()
     {
-        $error = 0;
         // The security layer will intercept this request
     }
 
