@@ -102,5 +102,16 @@ class SecuredController extends Controller {
     {
         return $this->render('FBAppBundle:Secured:helloadmin.html.twig', array(
             'name' => $name
-        ));    }
+        ));
+    }
+
+    /**
+     * @Route("/user", name="fb_user")
+     */
+    public function userAction()
+    {
+        return $this->render('FBAppBundle:Secured:user.html.twig', array(
+            'name' => "User"
+        ));
+    }
 }
