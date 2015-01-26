@@ -11,9 +11,9 @@ fb_app:
     resource: @FBAppBundle/Controller/
     type:     annotation
 
-redirect_to_proper_logout_page:
-    path: /{url}
-    defaults: { _controller: FBAppBundle:Redirect:logoutRedirect }
+redirect_login_logout_pages:
+    pattern: /{url}
     requirements:
-        url: .*(logout).*
+        var: ".*(login|logout).*"
+    defaults: { _controller: FBAppBundle:Redirect:loginLogoutRedirect }
     methods: [GET]

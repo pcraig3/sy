@@ -10,30 +10,25 @@ namespace pcraig3\FBAppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 
 class RedirectController extends Controller
 {
 
-    /**
-     * @Route(
-     *       path         = "/{url}",
-     *       name         = "redirect_to_proper_login_page",
-     *       requirements = { "url" = ".*login(?!\/check).*" },
-     *       methods      =  "GET" ,
-     * )
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function loginRedirectAction(Request $request)
+    public function loginLogoutRedirectAction(Request $request)
     {
-        $req = $request;
-        return $this->redirect($this->generateUrl('fb_login', array(), 301));
-    }
+        $pathInfo = $request->getPathInfo();
+        $requestUri = $request->getRequestUri();
 
-    public function logoutRedirectAction()
-    {
-        return $this->redirect($this->generateUrl('fb_logout', array(), 301));
+        $auth_array = array( 'login', 'logout' );
+
+        foreach( $auth_array as &$auth )
+            if( FALSE !== strpos( $pathInfo, $auth ) )
+                 return $this->redirect($this->generateUrl('fb_' . $auth, array(), 301));
+
+        unset( $auth );
+
+        /* @TODO: Fix error message */
+        throw $this->createNotFoundException('Login/Logout whatever problem');
     }
 }
