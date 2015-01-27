@@ -15,10 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 class RedirectController extends Controller
 {
 
+    /**
+     * @param Request $request  the request object containing (among other things) the url
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function loginLogoutRedirectAction(Request $request)
     {
         $pathInfo = $request->getPathInfo();
-        $requestUri = $request->getRequestUri();
 
         $auth_array = array( 'login', 'logout' );
 

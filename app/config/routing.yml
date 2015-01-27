@@ -11,6 +11,8 @@ fb_app:
     resource: @FBAppBundle/Controller/
     type:     annotation
 
+#Greedy regex match matches any url with the words 'login' or 'logout' that doesn't get caught earlier
+#It's important it's the last route defined
 redirect_login_logout_pages:
     pattern: /{url}
     requirements:
