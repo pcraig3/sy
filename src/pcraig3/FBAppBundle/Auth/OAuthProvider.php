@@ -49,18 +49,31 @@ class OAuthProvider extends OAuthUserProvider
 
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
+        /*
+        Data from Facebook response, for example:
 
-        //Data from Facebook response
-        $fid = $response->getUsername(); /* @TODO: An ID like: 112259658235204980084 */
-        $name = $response->getRealName();
-        $avatar = $response->getProfilePicture();
+        array(
+          "id" => "10152739996332675"
+          "email" => "paul_craig_16@hotmail.com"
+          "first_name" => "Paul"
+          "gender" => "male"
+          "last_name" => "Craig"
+          "link" => "https://www.facebook.com/app_scoped_user_id/10152739996332675/"
+          "locale" => "en_GB"
+          "name" => "Paul Craig"
+          "timezone" => -5
+          "updated_time" => "2014-11-03T20:35:28+0000"
+          "verified" => true
+        )
+        */
+        $raw_response = $response->getResponse();
 
-        foreach ( $response as $key => $value) {
-            $this->session->set('response/' . $key , $value);
+        foreach ( $raw_response as $key => $value)
+            $this->session->set('response/' . $key, $value);
 
-        }
+        $fid = $this->session->get('response/id'); /* A Facebook ID like: 10152739996332675 */
+        $name = $this->session->get('response/name');
 
-        //$this->session->set('user/name', $name);
 
         //Check if this Facebook user already exists in our app DB
         $result = $this->returnUserByFacebookId( $fid );
