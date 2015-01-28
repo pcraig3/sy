@@ -11,6 +11,7 @@ namespace pcraig3\FBAppBundle\Auth;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -50,15 +51,16 @@ class OAuthProvider extends OAuthUserProvider
     {
 
         //Data from Facebook response
-        $fid = $response->getUsername(); /* An ID like: 112259658235204980084 */
+        $fid = $response->getUsername(); /* @TODO: An ID like: 112259658235204980084 */
         $name = $response->getRealName();
         $avatar = $response->getProfilePicture();
 
-        //set data in session
-        /*$this->session->set('email', $email);
-        $this->session->set('nickname', $nickname);
-        $this->session->set('realname', $realname);
-        $this->session->set('avatar', $avatar);*/
+        foreach ( $response as $key => $value) {
+            $this->session->set('response/' . $key , $value);
+
+        }
+
+        //$this->session->set('user/name', $name);
 
         //Check if this Facebook user already exists in our app DB
         $result = $this->returnUserByFacebookId( $fid );

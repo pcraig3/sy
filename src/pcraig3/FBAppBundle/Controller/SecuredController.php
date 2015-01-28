@@ -11,6 +11,7 @@ namespace pcraig3\FBAppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/fb")
@@ -106,12 +107,26 @@ class SecuredController extends Controller {
     }
 
     /**
-     * @Route("/user", name="fb_user")
      */
-    public function userAction()
+
+    /**
+     * @Route("/user", name="fb_user")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userAction(Request $request)
     {
+        $response = $request->getSession()->get('response');
+
+        if(! isset( $response['name'] ) )
+            $response['name'] = 'Stupid';
+
+        $name = $response['name'];
+
         return $this->render('FBAppBundle:Secured:user.html.twig', array(
-            'name' => "User"
+            'name' => $name,
+            'response' => $response
         ));
     }
 }

@@ -42,8 +42,12 @@ security:
                 oauth_user_provider:
                     service: ib_user.oauth_user_provider
 
-            # Turn on anonymous for testings need.
-            #anonymous: ~
+#            remember_me:
+#                key: "%secret%"
+#                lifetime: 31536000 # 365 days in seconds
+#                path: /
+#                domain: ~ # Defaults to the current domain from $_SERVER
+
 
     # with these settings you can restrict or allow access for different parts
     # of your application based on roles, ip, host or methods

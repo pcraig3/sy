@@ -3,6 +3,9 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
 
+parameters:
+    session.attribute_bag.class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
+
 framework:
     #esi:             ~
     #translator:      { fallback: "%locale%" }
@@ -103,6 +106,6 @@ hwi_oauth:
                 display: popup #dialog is optimized for popup window
 
 
-services:
-    hwi_oauth.user.provider.entity:
-        class: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
+#services:
+#    hwi_oauth.user.provider.entity:
+#        class: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
