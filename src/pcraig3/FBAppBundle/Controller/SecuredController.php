@@ -9,9 +9,11 @@
 namespace pcraig3\FBAppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/fb")
@@ -19,9 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 class SecuredController extends Controller {
 
     /**
-     * @TODO: http://inchoo.net/dev-talk/symfony-hwioauthbundle-and-google-sign-in/
-     * @TODO: https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/doc/3-configuring_the_security_layer.md
-     *
+     * @TODO: get something AJAX back from Facebook, rather than just yourself
+     * @TODO: Routes in a routing.yml file in this controller
+     * @TODO: fix the route prefix
      *
     /
     /privacy
@@ -119,14 +121,53 @@ class SecuredController extends Controller {
     {
         $response = $request->getSession()->get('response');
 
-        if(! isset( $response['name'] ) )
-            $response['name'] = 'Stupid';
-
         $name = $response['name'];
 
         return $this->render('FBAppBundle:Secured:user.html.twig', array(
             'name' => $name,
             'response' => $response
         ));
+    }
+
+    /**
+     * @Route("/ajax", name ="fb_ajax_get")
+     * @Method("GET")
+     */
+    public function ajaxGetAction()
+    {
+        return $this->render('FBAppBundle:Secured:ajax.html.twig', array(
+            'name' => 'Nothing',
+            'response' => array()
+        ));
+    }
+
+    /**
+     * @Route("/ajax", name ="fb_ajax_post")
+     * @Method("POST")
+     */
+    public function ajaxPostAction()
+    {
+        $request = $this->container->get('request');
+        $post_value = $request->request->get('data', 'Nothing received');
+
+        if( is_numeric( $post_value ) ) {
+
+            $dt = new \DateTime();
+            $dt->setTimestamp($post_value);
+            $post_value = $dt->format('H:i:s');
+        }
+
+
+        $response_content = array(
+            "responseCode" =>   200,
+            "success" =>        1,
+            "message" =>        $post_value,
+        );
+
+        return new Response(
+            json_encode($response_content),
+            200,
+            array('Content-Type'=>'application/json')
+        );
     }
 }

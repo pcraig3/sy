@@ -1,0 +1,54 @@
+{% extends "FBAppBundle:Secured:user.html.twig" %}
+
+{% block body %}
+    <h1 class="title">Ajax!</h1>
+
+    <a id="ajax_trigger" href="#">ajax trigger</a>
+    <div id="ajax_target">ajax target</div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+
+    <script>
+        //yes, I know.  -.-
+
+        function do_some_ajax($element_whose_text_to_replace) {
+
+            $element_whose_text_to_replace.text("loading");
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('fb_ajax_post') }}",
+                data: { data: Math.floor(Date.now() / 1000) },
+                dataType: "json"
+            })
+                    .done(function (data) {
+
+                        if(data.success)
+                            $element_whose_text_to_replace.text(data.message);
+
+                        else
+                            alert('AJAX didn\'t work :(');
+                    });
+        }
+
+
+        jQuery(document).ready(function($) {
+
+            // Code here will be executed on document ready. Use $ as normal.
+
+            $('#ajax_trigger').on("click", function(e) {
+
+                do_some_ajax( $('#ajax_target') );
+
+                e.preventDefault();
+            });
+        });
+
+    </script>
+
+
+{% endblock %}
