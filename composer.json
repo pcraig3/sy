@@ -8,7 +8,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.6.*",
+        "symfony/symfony": "2.6.*@stable",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "~1.2",
         "twig/extensions": "~1.0",
@@ -18,8 +18,9 @@
         "sensio/distribution-bundle": "~3.0.12",
         "sensio/framework-extra-bundle": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        
-        "hwi/oauth-bundle": "~0.3.7"
+        "hwi/oauth-bundle": "~0.3.7",
+        "mockery/mockery": "0.9.*@dev",
+        "facebook/php-sdk-v4" : "4.0.*@dev"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
