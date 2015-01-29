@@ -32,6 +32,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        facebook_app_id: "%facebook_app_id%"
 
 # Assetic Configuration
 assetic:
@@ -99,8 +101,8 @@ hwi_oauth:
     resource_owners:
         facebook:
             type:                facebook
-            client_id:           413332112162337
-            client_secret:       f8b1ecbd168767efbb12e0694476e17b
+            client_id:           "%facebook_app_id%"
+            client_secret:       "%facebook_app_secret%"
             scope:               "public_profile,user_friends,email" #public_profile, email, user_friends
             options:
                 display: popup #dialog is optimized for popup window
