@@ -8,6 +8,8 @@
 
 namespace pcraig3\FBAppBundle\Auth;
 
+use Facebook\FacebookRequest;
+use Facebook\FacebookSession;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 
@@ -47,6 +49,10 @@ class OAuthProvider extends OAuthUserProvider
         }
     }
 
+    /**
+     * @param UserResponseInterface $response
+     * @return User
+     */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
         /*
@@ -74,6 +80,22 @@ class OAuthProvider extends OAuthUserProvider
         $fid = $this->session->get('response/id'); /* A Facebook ID like: 10152739996332675 */
         $name = $this->session->get('response/name');
 
+        FacebookSession::setDefaultApplication(
+            $this->container->getParameter('facebook_app_id'),
+            $this->container->getParameter('facebook_app_secret')
+        );
+
+        $facebookSession = new FacebookSession( $response->getAccessToken() );
+
+        //set a facebook session in our session
+        $this->session->set('response/facebookSession', $facebookSession);
+        $this->session->set('response/token', $response->getAccessToken());
+
+        $facebookRequest = new FacebookRequest($facebookSession, 'GET', '/me');
+        $facebookResponse = $facebookRequest->execute();
+        $graphObject = $facebookResponse->getGraphObject();
+
+        $this->session->set('response/graphObject', $graphObject);
 
         //Check if this Facebook user already exists in our app DB
         $result = $this->returnUserByFacebookId( $fid );

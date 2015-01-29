@@ -14,7 +14,3 @@ services:
     ib_user.oauth_user_provider:
         class: pcraig3\FBAppBundle\Auth\OAuthProvider
         arguments: [@session, @doctrine, @service_container]
-
-    facebook_factory:
-        class:        pcraig3\FBAppBundle\FacebookFactory
-        arguments:    ["%facebook_app_id%", "%facebook_app_secret%"]

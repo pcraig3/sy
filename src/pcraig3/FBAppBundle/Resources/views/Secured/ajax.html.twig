@@ -1,16 +1,20 @@
-{% extends "FBAppBundle:Secured:user.html.twig" %}
+{% extends "FBAppBundle::layout.html.twig" %}
 
 {% block body %}
     <h1 class="title">Ajax!</h1>
 
     <a id="ajax_trigger" href="#">ajax trigger</a>
-    <div id="ajax_target">ajax target</div>
+    <div id="ajax_target" data-ajax_url="{{ path('fb_ajax_post') }}">ajax target</div>
+
+    <br>
+
+    <a id="fb_ajax_trigger" href="#">fb ajax trigger</a>
+    <div id="fb_ajax_target" data-ajax_url="{{ path('fb_ajax_fb') }}">fb ajax target</div>
 {% endblock %}
 
 {% block javascripts %}
 
     {{ parent() }}
-
 
     <script>
         //yes, I know.  -.-
@@ -21,14 +25,16 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ path('fb_ajax_post') }}",
+                url: $element_whose_text_to_replace.data('ajax_url'),
                 data: { data: Math.floor(Date.now() / 1000) },
                 dataType: "json"
             })
                     .done(function (data) {
 
-                        if(data.success)
+                        if(data.success) {
                             $element_whose_text_to_replace.text(data.message);
+                            console.log(data.print);
+                        }
 
                         else
                             alert('AJAX didn\'t work :(');
@@ -43,6 +49,13 @@
             $('#ajax_trigger').on("click", function(e) {
 
                 do_some_ajax( $('#ajax_target') );
+
+                e.preventDefault();
+            });
+
+            $('#fb_ajax_trigger').on("click", function(e) {
+
+                do_some_ajax( $('#fb_ajax_target') );
 
                 e.preventDefault();
             });

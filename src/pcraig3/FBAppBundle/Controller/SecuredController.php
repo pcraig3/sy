@@ -8,6 +8,9 @@
 
 namespace pcraig3\FBAppBundle\Controller;
 
+use Facebook\FacebookRequest;
+use Facebook\FacebookSession;
+use Facebook\GraphObject;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -121,11 +124,25 @@ class SecuredController extends Controller {
     {
         $response = $request->getSession()->get('response');
 
+        //@TODO: This sucks
+        FacebookSession::setDefaultApplication(
+            $this->container->getParameter('facebook_app_id'),
+            $this->container->getParameter('facebook_app_secret')
+        );
+
+        $facebookSession = $response['facebookSession'];
+
+        $facebookRequest = new FacebookRequest($facebookSession, 'GET', '/me');
+        $facebookResponse = $facebookRequest->execute();
+        $graphObject = $facebookResponse->getGraphObject();
+
+
         $name = $response['name'];
 
         return $this->render('FBAppBundle:Secured:user.html.twig', array(
-            'name' => $name,
-            'response' => $response
+            'name' =>               $name,
+            'response' =>           $response,
+            'graphObject' =>        $graphObject
         ));
     }
 
@@ -135,10 +152,7 @@ class SecuredController extends Controller {
      */
     public function ajaxGetAction()
     {
-        return $this->render('FBAppBundle:Secured:ajax.html.twig', array(
-            'name' => 'Nothing',
-            'response' => array()
-        ));
+        return $this->render('FBAppBundle:Secured:ajax.html.twig');
     }
 
     /**
@@ -162,6 +176,52 @@ class SecuredController extends Controller {
             "responseCode" =>   200,
             "success" =>        1,
             "message" =>        $post_value,
+        );
+
+        return new Response(
+            json_encode($response_content),
+            200,
+            array('Content-Type'=>'application/json')
+        );
+    }
+
+    /**
+     * @Route("/ajax/fb", name ="fb_ajax_fb")
+     * @Method("POST")
+     */
+    public function ajaxFbAction()
+    {
+        $request = $this->container->get('request');
+
+        $response = $request->getSession()->get('response');
+
+        //@TODO: This sucks
+        FacebookSession::setDefaultApplication(
+            $this->container->getParameter('facebook_app_id'),
+            $this->container->getParameter('facebook_app_secret')
+        );
+
+        $facebookSession = $response['facebookSession'];
+
+        $message = "Facebook session found";
+        $graphObject =  array();
+
+        if( $facebookSession ) {
+
+            $facebookRequest = new FacebookRequest($facebookSession, 'GET', '/me');
+            $facebookResponse = $facebookRequest->execute();
+            $graphObject = $facebookResponse->getGraphObject();
+
+        }
+        else
+            $message = "No facebook session found";
+
+
+        $response_content = array(
+            "responseCode" =>   200,
+            "success" =>        1,
+            "message" =>        $message,
+            "print" =>          $graphObject->getPropertyNames()
         );
 
         return new Response(
