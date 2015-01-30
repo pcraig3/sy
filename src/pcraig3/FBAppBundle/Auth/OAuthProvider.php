@@ -80,12 +80,8 @@ class OAuthProvider extends OAuthUserProvider
         $fid = $this->session->get('response/id'); /* A Facebook ID like: 10152739996332675 */
         $name = $this->session->get('response/name');
 
-        FacebookSession::setDefaultApplication(
-            $this->container->getParameter('facebook_app_id'),
-            $this->container->getParameter('facebook_app_secret')
-        );
-
-        $facebookSession = new FacebookSession( $response->getAccessToken() );
+        $facebookIsolationLayer = $this->container->get('facebook_isolation_layer');
+        $facebookSession = $facebookIsolationLayer->getFacebookSession( $response->getAccessToken() );
 
         //set a facebook session in our session
         $this->session->set('response/facebookSession', $facebookSession);

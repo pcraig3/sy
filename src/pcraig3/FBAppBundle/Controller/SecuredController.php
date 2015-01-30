@@ -124,13 +124,17 @@ class SecuredController extends Controller {
     {
         $response = $request->getSession()->get('response');
 
-        //@TODO: This sucks
-        FacebookSession::setDefaultApplication(
+        /*@TODO: This sucks
+        .FacebookSession::setDefaultApplication(
             $this->container->getParameter('facebook_app_id'),
             $this->container->getParameter('facebook_app_secret')
         );
 
         $facebookSession = $response['facebookSession'];
+        */
+
+        $facebookIsolationLayer = $this->container->get('facebook_isolation_layer');
+        $facebookSession = $facebookIsolationLayer->getFacebookSession( $response['token'] );
 
         $facebookRequest = new FacebookRequest($facebookSession, 'GET', '/me');
         $facebookResponse = $facebookRequest->execute();
@@ -139,10 +143,18 @@ class SecuredController extends Controller {
 
         $name = $response['name'];
 
+        $arr = array(
+            $facebookIsolationLayer->getAppSecret()
+        );
+
+        $facebookIsolationLayer->setAppSecret('john');
+
+        array_push($arr, $facebookIsolationLayer->getAppSecret());
+
         return $this->render('FBAppBundle:Secured:user.html.twig', array(
             'name' =>               $name,
             'response' =>           $response,
-            'graphObject' =>        $graphObject
+            'graphObject' =>        $arr
         ));
     }
 
@@ -195,6 +207,9 @@ class SecuredController extends Controller {
 
         $response = $request->getSession()->get('response');
 
+        /*
+         *
+         *
         //@TODO: This sucks
         FacebookSession::setDefaultApplication(
             $this->container->getParameter('facebook_app_id'),
@@ -202,6 +217,10 @@ class SecuredController extends Controller {
         );
 
         $facebookSession = $response['facebookSession'];
+        */
+
+        $facebookIsolationLayer = $this->container->get('facebook_isolation_layer');
+        $facebookSession = $facebookIsolationLayer->getFacebookSession( $response['token'] );
 
         $message = "Facebook session found";
         $graphObject =  array();
@@ -217,11 +236,19 @@ class SecuredController extends Controller {
             $message = "No facebook session found";
 
 
+        $arr = array(
+            $facebookIsolationLayer->getAppSecret()
+        );
+
+        $facebookIsolationLayer->setAppSecret('paul');
+
+        array_push($arr, $facebookIsolationLayer->getAppSecret());
+
         $response_content = array(
             "responseCode" =>   200,
             "success" =>        1,
             "message" =>        $message,
-            "print" =>          $graphObject->getPropertyNames()
+            "print" =>          $arr
         );
 
         return new Response(
