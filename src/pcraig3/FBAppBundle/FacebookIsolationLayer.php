@@ -9,6 +9,7 @@
 namespace pcraig3\FBAppBundle;
 
 
+use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
 
 class FacebookIsolationLayer {
@@ -23,7 +24,7 @@ class FacebookIsolationLayer {
         $this->appSecret = $app_secret;
     }
 
-    function getFacebookSession( $accessToken ) {
+    public function returnFacebookSession($accessToken) {
 
         FacebookSession::setDefaultApplication(
             $this->appId,
@@ -31,6 +32,15 @@ class FacebookIsolationLayer {
         );
 
         return new FacebookSession($accessToken);
+    }
+
+    public function returnGraphObject( $accessToken, $method = 'GET', $param = '/me' ) {
+
+        $facebookSession = $this->returnFacebookSession($accessToken);
+
+        $facebookRequest = new FacebookRequest($facebookSession, $method, $param);
+        $facebookResponse = $facebookRequest->execute();
+        return $facebookResponse->getGraphObject();
     }
 
 }

@@ -8,8 +8,7 @@
 
 namespace pcraig3\FBAppBundle\Controller;
 
-use Facebook\FacebookRequest;
-use Facebook\FacebookSession;
+
 use Facebook\GraphObject;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -123,11 +122,7 @@ class SecuredController extends Controller {
     public function userAction(Request $request)
     {
         $response = $request->getSession()->get('response');
-        $facebookSession = $this->container->get('facebook_isolation_layer')->getFacebookSession( $response['token'] );
-
-        $facebookRequest = new FacebookRequest($facebookSession, 'GET', '/me');
-        $facebookResponse = $facebookRequest->execute();
-        $graphObject = $facebookResponse->getGraphObject();
+        $graphObject = $this->container->get('facebook_isolation_layer')->returnGraphObject( $response['token'] );
 
         $name = $response['name'];
 
@@ -184,20 +179,12 @@ class SecuredController extends Controller {
     public function ajaxFbAction()
     {
         $response = $this->container->get('request')->getSession()->get('response');
-        $facebookSession = $this->container->get('facebook_isolation_layer')->getFacebookSession( $response['token'] );
+        $graphObject = $this->container->get('facebook_isolation_layer')->returnGraphObject( $response['token'] );
 
-        $message = "Facebook session found";
-        $graphObject =  array();
+        $message = "Graph Object found";
 
-        if( $facebookSession ) {
-
-            $facebookRequest = new FacebookRequest($facebookSession, 'GET', '/me');
-            $facebookResponse = $facebookRequest->execute();
-            $graphObject = $facebookResponse->getGraphObject();
-
-        }
-        else
-            $message = "No facebook session found";
+        if(! $graphObject )
+            $message = "No " . $message;
 
         $response_content = array(
             "responseCode" =>   200,
